@@ -5,21 +5,24 @@ import { randomUUID } from 'crypto';
 
 @Injectable()
 class NotesService {
-  private readonly notes = new Array<Note>();
+  private readonly notes = new Map<string, Note>();
   createNote(title: string, content: string): void {
     const id = randomUUID();
     const note = new Note(id, title, content);
-    this.notes.push(note);
+    this.notes.set(id, note);
   }
   getNotes(): Note[] {
-    return this.notes;
+    return Array.from(this.notes.values());
   }
   getNoteByID(id: string): Note | undefined {
-    const index = this.notes.findIndex((note) => note.id === id);
-    if (index === -1) {
-      return undefined;
+    const note = this.notes.get(id);
+    return note;
+  }
+  deleteNoteByID(id: string): void {
+    if (!this.notes.has(id)) {
+      return;
     }
-    return this.notes[index];
+    this.notes.delete(id);
   }
 }
 

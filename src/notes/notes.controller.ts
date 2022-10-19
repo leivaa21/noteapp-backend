@@ -1,5 +1,6 @@
 import {
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -45,11 +46,17 @@ class NotesController {
     res.status(201).json({ message: 'ok!' });
   }
   @Get('/')
+  @ApiOperation({
+    summary: 'Get all the notes',
+  })
   getNotes(@Request() req: request, @Response() res: response) {
     const notes = this.service.getNotes();
     res.status(200).json({ notes: notes.map((note) => note.json) });
   }
   @Get('/:id')
+  @ApiOperation({
+    summary: 'Get a certain note',
+  })
   getOneNote(
     @Param('id') id: string,
     @Request() req: request,
@@ -61,6 +68,18 @@ class NotesController {
       return;
     }
     res.status(200).json({ note: note.json });
+  }
+  @Delete('/:id')
+  @ApiOperation({
+    summary: 'Deletes a note with a certain id',
+  })
+  deleteOneNote(
+    @Param('id') id: string,
+    @Request() req: request,
+    @Response() res: response,
+  ) {
+    this.service.deleteNoteByID(id);
+    res.status(200).json({ message: 'Note was deleted' });
   }
 }
 
