@@ -6,14 +6,36 @@ import {
   Request,
   Response,
 } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiConsumes,
+  ApiOperation,
+  ApiProperty,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request as request, Response as response } from 'express';
 import { NotesService } from './notes.service';
 
+class CreateNoteDTO {
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  content: string;
+}
+@ApiTags('Notes')
 @Controller('/api/notes')
 class NotesController {
   constructor(private readonly service: NotesService) {}
 
   @Post('/')
+  @ApiOperation({
+    summary: 'Create a new note given all the params',
+  })
+  @ApiConsumes('application/json')
+  @ApiBody({
+    type: CreateNoteDTO,
+  })
   createNewNote(@Request() req: request, @Response() res: response) {
     const { title, content } = req.body;
     if (title === undefined || content === undefined) {
