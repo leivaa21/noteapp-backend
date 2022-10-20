@@ -24,6 +24,10 @@ class NotesService {
     }
     this.notes.delete(id);
   }
+  editNoteByID(id: string, note: Note) {
+    this.deleteNoteByID(id);
+    this.createNote(note.title, note.content);
+  }
 }
 
 export { NotesService };

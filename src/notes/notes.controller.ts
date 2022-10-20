@@ -1,9 +1,11 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   Param,
   Post,
+  Put,
   Request,
   Response,
 } from '@nestjs/common';
@@ -15,6 +17,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Request as request, Response as response } from 'express';
+import Note from './note.entity';
 import { NotesService } from './notes.service';
 
 class CreateNoteDTO {
@@ -45,6 +48,11 @@ class NotesController {
     this.service.createNote(title, content);
     res.status(201).json({ message: 'ok!' });
   }
+  
+  
+  
+  
+  
   @Get('/')
   @ApiOperation({
     summary: 'Get all the notes',
@@ -53,6 +61,22 @@ class NotesController {
     const notes = this.service.getNotes();
     res.status(200).json({ notes: notes.map((note) => note.json) });
   }
+
+  @Put('/:id')
+  editNote(
+    @Param('id') id: string,
+    @Request() req: request,
+    @Response() res: response,
+  ) {
+    const { title, content } = req.body;
+    this.service.editNoteByID(id, new Note(id, title, content));
+    res.status(200).json({ message: 'OK' });
+  }
+
+
+
+
+
   @Get('/:id')
   @ApiOperation({
     summary: 'Get a certain note',
